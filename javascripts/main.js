@@ -36,3 +36,31 @@ $("#logout").click(() => {
     console.log("logout clicked");
     user.logOut();
 });
+
+
+
+//Build Object to push and access FB
+function buildMovieObj() {
+    let MovieObj = {
+        id: $("#id").val(),
+        title: $("#title").val(),
+        year: $("#year").val(),
+        actors: $("#actors").val(),
+        watch: $("#watch").val(),
+        watched: $("#watched").val(),
+        rating: $("#rating").val(),
+        uid: user.getUser() // include uid to the object only if a user is logged in.
+    };
+    return movieObj;
+}
+
+// Send newMovie data to db then reload DOM with updated song data
+$(document).on("click", ".save_new_btn", function() {
+    console.log("click save new movie");
+    let movieObj = buildMovieObj();
+    //call to database
+    db.addMovie(movieObj)
+        .then((movieID) => {
+            // loadMoviesToDOM();
+        });
+});
