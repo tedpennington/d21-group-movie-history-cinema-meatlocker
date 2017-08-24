@@ -22,17 +22,16 @@ function getApiMovies() {
         userInput = $("#dbSearch").val();
         console.log("user input", userInput);
         $.ajax({
-            url: apiLink + "fire" + "&page=1",
+            url: apiLink + userInput + "&page=1",
             type: "GET",
             dataType: "json"
         }).done((response) => {
             console.log("response", response);
-            resolve();
+            resolve(response);
         });
 
     });
 }
-getApiMovies();
 
-module.exports = getApiMovies;
+module.exports = {getApiMovies};
 
