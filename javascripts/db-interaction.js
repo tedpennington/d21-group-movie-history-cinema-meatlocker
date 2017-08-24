@@ -1,4 +1,3 @@
-
 "use strict";
 console.log("db-interaction.js");
 
@@ -7,8 +6,10 @@ let $ = require('jquery'),
     firebase = require("./fb-Config");
 
 
-// API key: https://api.themoviedb.org/3/movie/550?api_key=dbe82c339d871418f3be9db2647bb249
+//For title search:
 //working: https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=big&page=1
+//For images:
+//https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
 
 
 
@@ -33,5 +34,28 @@ function getApiMovies() {
     });
 }
 
-module.exports = {getApiMovies};
 
+
+function addMovie(movieFormObj) {
+    console.log("addMovie", movieFormObj);
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `${firebase.getFBsettings().databaseURL}/movies.json`,
+            type: 'POST',
+            data: JSON.stringify(movieFormObj),
+            dataType: 'json'
+        }).done((movieID) => {
+            resolve(movieID);
+        });
+    });
+}
+
+
+
+
+
+
+module.exports = {
+    getApiMovies,
+    addMovie
+};
