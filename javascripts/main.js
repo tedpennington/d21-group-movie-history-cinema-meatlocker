@@ -6,14 +6,25 @@ let $ = require('jquery'),
     templates = require("./dom-builder"),
     user = require("./user");
 
+let userInput = "";
+let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
-// $("#searchButton1").click(function() {
 
-//             console.log("data", dataFromApi);
-//             var movieForm = templates.movieForm()
-//                 .then((dataFromApi) => {
+//after user clicks button, load 
+$("#searchButton1").click(function() {
+    console.log ("db", db);
+    db.getApiMovies()
+    .then(function(movieData) {
+        console.log("data", movieData);
+    });
 
-//                 });
+    // console.log("searched", $("#dbSearch").val());
+    
+    // var movieForm = templates.movieForm()
+    //     .then((dataFromApi) => {
+
+    // });
+});
 
 
 
