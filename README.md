@@ -1,4 +1,15 @@
-# Movie History
+# Accessing this app
+
++ clone repository
+
++ run npm intsall in lib folder
+
++ run grunt in lib to compile
+
+
+
+
+Movie History
 
 You will be split up into teams of three, and your team will build a new application to keep track of movies that you have seen, and want to see, with your own ratings.
 * https://www.themoviedb.org
