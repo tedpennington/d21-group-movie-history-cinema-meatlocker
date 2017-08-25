@@ -11,8 +11,10 @@ let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
 
-//after user clicks button, load
-$("#searchButton1").click(function() {
+//after user hit enter, load
+$("searchButton1").addEventListener("keyup", function(event){
+    if (event.keyCode === 13) {
+// $("#searchButton1").click(function() {
 //     console.log("db", db);
 //     db.getApiMovies()
 //         .then(function(movieData) {
