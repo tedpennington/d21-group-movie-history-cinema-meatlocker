@@ -12,10 +12,10 @@ let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d87141
 
 //after user clicks button, load 
 $("#searchButton1").click(function() {
-    console.log ("db", db);
+    $("#forHandlebarsInsert").html();
     db.getApiMovies()
     .then(function(movieData) {
-        console.log("data", movieData);
+        templates.populatePage(movieData);
     });
 
     // console.log("searched", $("#dbSearch").val());
