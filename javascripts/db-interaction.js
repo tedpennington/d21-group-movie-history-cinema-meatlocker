@@ -5,7 +5,7 @@ console.log("db-interaction.js");
 let $ = require('jquery'),
     firebase = require("./fb-Config");
 
-
+//NOTESl
 //For title search:
 //working: https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=big&page=1
 //For images:
@@ -16,10 +16,8 @@ let $ = require('jquery'),
 let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
-function getApiMovies() {
+function getApiMovies(user) {
     return new Promise((resolve, reject) => {
-
-
         userInput = $("#dbSearch").val();
         console.log("user input", userInput);
         $.ajax({
@@ -35,7 +33,7 @@ function getApiMovies() {
 }
 
 
-
+//add user selected movies to Firebase:
 function addMovie(movieFormObj) {
     console.log("addMovie", movieFormObj);
     return new Promise((resolve, reject) => {
@@ -51,11 +49,53 @@ function addMovie(movieFormObj) {
 }
 
 
+//Delete movie from user list (and from database if no others users have added):
+function deleteMovie(movieId) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `${firebase.getFBsettings().databaseURL}/movies/${movieId}.json`,
+            method: "DELETE"
+        }).done(() => {
+            resolve();
+        });
+    });
+}
 
+//Retrieve Movie:
+function getMovie(movieId) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `${firebase.getFBsettings().databaseURL}/movies/${movieId}.json`
+        }).done((movieData) => {
+            resolve(movieData);
+        }).fail((error) => {
+            reject(error);
+        });
+    });
+}
+
+
+//Edit Movie (pass watched and rating once coded, below:
+function editMovies(movieId) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `${firebase.getFBsettings().databaseURL}/movies/${movieId}.json`,
+            type: 'PUT',
+            //obj after watched or rating edited where obj is below
+            // data: JSON.stringify(obj)
+            //when done pass new object back
+        }).done((data) => {
+            resolve(data);
+        });
+    });
+}
 
 
 
 module.exports = {
     getApiMovies,
-    addMovie
+    addMovie,
+    deleteMovie,
+    getMovie,
+    editMovies,
 };
