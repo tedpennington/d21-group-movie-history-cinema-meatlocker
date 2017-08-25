@@ -1,6 +1,6 @@
 
 "use strict";
-console.log("db-interaction.js");
+// console.log("db-interaction.js");
 
 
 let $ = require('jquery'),
@@ -25,7 +25,7 @@ function getApiMovies() { //param with cast
             type: "GET",
             dataType: "json"
         }).done((response) => {
-            console.log("response", response);
+            // console.log("getApiMovies response: ", response);
             resolve(response);
         });
 
@@ -35,25 +35,37 @@ function getApiMovies() { //param with cast
 //second call with cast2
 
 let castLink = "https://api.themoviedb.org/3/movie/";
-let movieId = "";
+// let movieId = "";
 let apiKeyEnd = "/credits?api_key=dbe82c339d871418f3be9db2647bb249";
-
 // https://api.themoviedb.org/3/movie/674/credits?api_key=dbe82c339d871418f3be9db2647bb249
 
-function addCast() {
+function addCast(movieId) {
     return new Promise((resolve, reject) => {
 
+        userInput = $("#dbSearch").val();
         $.ajax({
             url: castLink + movieId + apiKeyEnd,
             type: "GET",
             dataType: "json"
-        }).done((response1) => {
-            console.log("response1: ", response1);
-            resolve(response1);
+        }).done((response) => {
+            // debugger;
+            // console.log('cast response: ', response);
+            let castOutput = document.getElementById('castOutput');
+
+            // loop through response and get first 5 items
+            for (let i = 0; i < 5 ; i++) {
+              castOutput.append(`<li> ${response.cast[i].name} </li>`);
+              console.log('response.cast[i].name: ', response.cast[i].name);
+            }
+
+            // loop over them again
+            // create your <li></li> here
+
+            // assign those items to getElementById
+            resolve(response);
         });
     });
 }
-
 module.exports = { getApiMovies, addCast };
 
 
