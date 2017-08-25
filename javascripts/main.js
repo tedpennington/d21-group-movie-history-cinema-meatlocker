@@ -23,24 +23,11 @@ $("#searchButton1").click(function() {
         .then(function(movieData) {
             movieData.results.forEach(function(movie) {
                 buildMovieObj(movie);
+                console.log ("movie", movie);
 
-
-
-
-           /* templates.populatePage(movieData);*/
-            // debugger;
-
-                // db.addCast(movie.id)
-            //         .then(function(castData) {
-            //             // console.log('castData', castData);
-            //         });
-            // }, this);
+           
         });
 
-    // console.log("searched", $("#dbSearch").val());
-    // var movieForm = templates.movieForm()
-    //     .then((dataFromApi) => {
-    // });
     });
 });
 
@@ -85,7 +72,9 @@ function buildMovieObj(movie) {
         uid: user.getUser() // include uid to the object only if a user is logged in.
     };
     arrayOfMoviesFromSearch.push(movieObj);
-    console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
+    console.log ("movieOBJ", arrayOfMoviesFromSearch);
+    templates.populatePage(arrayOfMoviesFromSearch);
+    // console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
 });
     // return movieObj;
 }
