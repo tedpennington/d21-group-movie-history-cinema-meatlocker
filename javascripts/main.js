@@ -11,37 +11,28 @@ let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
 
-//after user clicks button, load
-$("#searchButton1").click(function() {
-    //     console.log("db", db);
-    //     db.getApiMovies()
-    //         .then(function(movieData) {
-    //             console.log("data", movieData);
-    //         });
+
+
+//after user hits enter, load
+$("searchButton1").addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+// $("#searchButton1").click(function() {
+
     $("#forHandlebarsInsert").html();
     db.getApiMovies()
         .then(function(movieData) {
             movieData.results.forEach(function(movie) {
                 buildMovieObj(movie);
+              
+              
 
-
-
-
-                /* templates.populatePage(movieData);*/
-                // debugger;
-
-                // db.addCast(movie.id)
-                //         .then(function(castData) {
-                //             // console.log('castData', castData);
-                //         });
-                // }, this);
-            });
-
-            // console.log("searched", $("#dbSearch").val());
-            // var movieForm = templates.movieForm()
-            //     .then((dataFromApi) => {
-            // });
+        templates.populatePage(movieData);
+            console.log('movieData: ', movieData);
         });
+    });
+
+    };
+
 });
 
 // on click of show more button
