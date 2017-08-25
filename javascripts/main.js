@@ -17,6 +17,11 @@ $("#searchButton1").click(function() {
         .then(function(movieData) {
             console.log("data", movieData);
         });
+    $("#forHandlebarsInsert").html();
+    db.getApiMovies()
+        .then(function(movieData) {
+            templates.populatePage(movieData);
+        });
 
     // console.log("searched", $("#dbSearch").val());
 
