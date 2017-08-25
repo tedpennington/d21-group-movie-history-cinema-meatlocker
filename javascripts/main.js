@@ -24,13 +24,9 @@ $("#searchButton1").click(function() {
                     });
             }, this);
         });
-
-
     // console.log("searched", $("#dbSearch").val());
-
     // var movieForm = templates.movieForm()
     //     .then((dataFromApi) => {
-
     // });
 });
 

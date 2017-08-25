@@ -53,15 +53,14 @@ function addCast(movieId) {
             let castOutput = document.getElementById('castOutput');
 
             // loop through response and get first 5 items
+            // loop over them again create <li></li>
+            // assign those items to getElementById
             for (let i = 0; i < 5 ; i++) {
-              castOutput.append(`<li> ${response.cast[i].name} </li>`);
-              console.log('response.cast[i].name: ', response.cast[i].name);
+                castOutput.innerHTML += `<li>${response.cast[i].name}</li>`;
+                // castOutput.firstElementChild.append(`${response.cast[i].name}`);
+                console.log('response.cast[i].name: ', response.cast[i].name);
             }
 
-            // loop over them again
-            // create your <li></li> here
-
-            // assign those items to getElementById
             resolve(response);
         });
     });
