@@ -48,7 +48,6 @@ function addCast(movieId) {
             type: "GET",
             dataType: "json"
         }).done((response) => {
-            // debugger;
             // console.log('cast response: ', response);
             let castOutput = "";
 
@@ -57,10 +56,7 @@ function addCast(movieId) {
             // assign those items to getElementById
             for (let i = 0; i < 5 ; i++) {
                 castOutput += `${response.cast[i].name}` + " ";
-                // castOutput.firstElementChild.append(`${response.cast[i].name}`);
             }
-                // console.log('response.cast[i].name: ', castOutput);
-
             resolve(castOutput);
         });
     });
