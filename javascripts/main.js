@@ -12,14 +12,19 @@ let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d87141
 
 //after user clicks button, load 
 $("#searchButton1").click(function() {
+    console.log("db", db);
+    db.getApiMovies()
+        .then(function(movieData) {
+            console.log("data", movieData);
+        });
     $("#forHandlebarsInsert").html();
     db.getApiMovies()
-    .then(function(movieData) {
-        templates.populatePage(movieData);
-    });
+        .then(function(movieData) {
+            templates.populatePage(movieData);
+        });
 
     // console.log("searched", $("#dbSearch").val());
-    
+
     // var movieForm = templates.movieForm()
     //     .then((dataFromApi) => {
 
@@ -52,9 +57,11 @@ $("#logout").click(() => {
 
 //Build Object to push and access FB
 function buildMovieObj() {
-    let MovieObj = {
+    let movieObj = {
+        //movie id #
         id: $("#id").val(),
         title: $("#title").val(),
+        poster: $("#poster").val(),
         year: $("#year").val(),
         actors: $("#actors").val(),
         watch: $("#watch").val(),
