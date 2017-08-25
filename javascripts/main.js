@@ -69,7 +69,7 @@ function buildMovieObj() {
         rating: $("#rating").val(),
         uid: user.getUser() // include uid to the object only if a user is logged in.
     };
-    return MovieObj;
+    return movieObj;
 }
 
 // Send newMovie data to db then reload DOM with updated song data
