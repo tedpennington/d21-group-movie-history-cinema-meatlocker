@@ -65,7 +65,6 @@ function addCast(movieId) {
         });
     });
 }
-module.exports = { getApiMovies, addCast };
 
 //add user selected movies to Firebase:
 function addMovie(movieFormObj) {
@@ -132,4 +131,5 @@ module.exports = {
     deleteMovie,
     getMovie,
     editMovies,
+    addCast,
 };

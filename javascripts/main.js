@@ -21,7 +21,7 @@ $("#searchButton1").click(function() {
     db.getApiMovies()
         .then(function(movieData) {
             templates.populatePage(movieData);
-
+            debugger;
             movieData.results.forEach(function(movie) {
                 db.addCast(movie.id)
                     .then(function(castData) {
