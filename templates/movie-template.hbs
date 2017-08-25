@@ -1,12 +1,15 @@
 {{#each this}}
 
 <div class="col-lg-2" id="movie--{{@index}}">
-      <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{poster_path}}" alt="Card image cap">
+      <img class="card-img-top" src="https://image.tmdb.org/t/p/w300/{{poster_path}}" alt="Card image cap">
       <div class="card-block">
           <h4 class="card-title">{{title}}</h4>
           <p class="card-text">{{release_date}}</p>
           <p class="card-text">Actors</p>
           <p class="card-text">Rating</p>
+          <nav aria-label="...">
+           <button id="addToUserMovies" type="button"><a href="#">+ My Movies</a><span class="sr-only">(current)</span></button>
+</nav>
       </div>
 </div>
 
