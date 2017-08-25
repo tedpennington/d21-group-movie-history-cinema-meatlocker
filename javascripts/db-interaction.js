@@ -50,18 +50,18 @@ function addCast(movieId) {
         }).done((response) => {
             // debugger;
             // console.log('cast response: ', response);
-            let castOutput = document.getElementById('castOutput');
+            let castOutput = "";
 
             // loop through response and get first 5 items
             // loop over them again create <li></li>
             // assign those items to getElementById
             for (let i = 0; i < 5 ; i++) {
-                castOutput.innerHTML += `<li>${response.cast[i].name}</li>`;
+                castOutput += `${response.cast[i].name}` + " ";
                 // castOutput.firstElementChild.append(`${response.cast[i].name}`);
-                console.log('response.cast[i].name: ', response.cast[i].name);
             }
+                // console.log('response.cast[i].name: ', castOutput);
 
-            resolve(response);
+            resolve(castOutput);
         });
     });
 }

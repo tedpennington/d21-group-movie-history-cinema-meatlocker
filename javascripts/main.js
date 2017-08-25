@@ -4,7 +4,8 @@
 let $ = require('jquery'),
     db = require("./db-interaction"),
     templates = require("./dom-builder"),
-    user = require("./user");
+    user = require("./user"),
+    arrayOfMoviesFromSearch = [];
 
 let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
@@ -20,20 +21,27 @@ $("#searchButton1").click(function() {
     $("#forHandlebarsInsert").html();
     db.getApiMovies()
         .then(function(movieData) {
-            templates.populatePage(movieData);
-            debugger;
             movieData.results.forEach(function(movie) {
-                db.addCast(movie.id)
-                    .then(function(castData) {
-                        // console.log('castData', castData);
-                    });
-            }, this);
+                buildMovieObj(movie);
+
+
+
+
+           /* templates.populatePage(movieData);*/
+            // debugger;
+
+                // db.addCast(movie.id)
+            //         .then(function(castData) {
+            //             // console.log('castData', castData);
+            //         });
+            // }, this);
         });
 
     // console.log("searched", $("#dbSearch").val());
     // var movieForm = templates.movieForm()
     //     .then((dataFromApi) => {
     // });
+    });
 });
 
 // on click of show more button
@@ -60,20 +68,26 @@ $("#logout").click(() => {
 });
 
 //Build Object to push and access FB
-function buildMovieObj() {
+function buildMovieObj(movie) {
+    db.addCast(movie.id)
+        .then((result) => {
+
     let movieObj = {
         //movie id #
-        id: $("#id").val(),
-        title: $("#title").val(),
-        poster: $("#poster").val(),
-        year: $("#year").val(),
-        actors: $("#actors").val(),
-        watch: $("#watch").val(),
-        watched: $("#watched").val(),
-        rating: $("#rating").val(),
+        id: movie.id,
+        title: movie.title,
+        poster: movie.poster_path,
+        year: movie.release_date,
+        actors: result,
+        watch: false,
+        watched: false,
+        rating: 0,
         uid: user.getUser() // include uid to the object only if a user is logged in.
     };
-    return movieObj;
+    arrayOfMoviesFromSearch.push(movieObj);
+    console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
+});
+    // return movieObj;
 }
 
 // Send newMovie data to db then reload DOM with updated song data
