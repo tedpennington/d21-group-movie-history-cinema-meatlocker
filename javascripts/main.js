@@ -10,30 +10,37 @@ let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
 
-//after user clicks button, load 
+//after user clicks button, load
 $("#searchButton1").click(function() {
-    console.log("db", db);
-    db.getApiMovies()
-        .then(function(movieData) {
-            console.log("data", movieData);
-        });
+//     console.log("db", db);
+//     db.getApiMovies()
+//         .then(function(movieData) {
+//             console.log("data", movieData);
+//         });
     $("#forHandlebarsInsert").html();
     db.getApiMovies()
         .then(function(movieData) {
             templates.populatePage(movieData);
+            debugger;
+            movieData.results.forEach(function(movie) {
+                db.addCast(movie.id)
+                    .then(function(castData) {
+                        // console.log('castData', castData);
+                    });
+            }, this);
         });
 
     // console.log("searched", $("#dbSearch").val());
-
     // var movieForm = templates.movieForm()
     //     .then((dataFromApi) => {
-
     // });
 });
 
+// on click of show more button
+// toggle visible class to show cast list
 
 
-// User login section. 
+// User login section.
 $("#auth-btn").click(function() {
     console.log("clicked auth");
     user.logInGoogle()
@@ -47,13 +54,10 @@ $("#auth-btn").click(function() {
         });
 });
 
-
 $("#logout").click(() => {
     console.log("logout clicked");
     user.logOut();
 });
-
-
 
 //Build Object to push and access FB
 function buildMovieObj() {
@@ -69,7 +73,7 @@ function buildMovieObj() {
         rating: $("#rating").val(),
         uid: user.getUser() // include uid to the object only if a user is logged in.
     };
-    return MovieObj;
+    return movieObj;
 }
 
 // Send newMovie data to db then reload DOM with updated song data
