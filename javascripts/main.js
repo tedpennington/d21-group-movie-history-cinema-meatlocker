@@ -15,24 +15,25 @@ let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d87141
 
 //after user hits enter, load
 document.getElementById("dbSearch").addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
+    // console.log ("EvEnTTTT", event);
+    if (event.keyCode == 13) {
+       event.preventDefault();
+//The below two lines clear the HTML and movie array so that each new search will present only movies that match the latest search
+        $("#forHandlebarsInsert").html();
+        
 
-// $("#searchButton1").click(function() {
+        db.getApiMovies()
+            .then(function(movieData) {
+                movieData.results.forEach(function(movie) {
+                    arrayOfMoviesFromSearch = [];
+                    buildMovieObj(movie);
+                    console.log("movie", movie);
 
-    $("#forHandlebarsInsert").html();
-    db.getApiMovies()
-        .then(function(movieData) {
-            movieData.results.forEach(function(movie) {
-                buildMovieObj(movie);
-                console.log("movie", movie);
-
+                });
             });
-        });
     }
 });
 
-// on click of show more button
-// toggle visible class to show cast list
 
 
 ////////////////////////////////////////////////////////
@@ -55,6 +56,8 @@ $("#auth-btn").click(function() {
 $("#logout").click(() => {
     console.log("logout clicked");
     user.logOut();
+    $("#logout").addClass("is-hidden");
+    $("#auth-btn").removeClass("is-hidden");
 });
 
 
@@ -78,7 +81,7 @@ function buildMovieObj(movie) {
         uid: user.getUser() // include uid to the object only if a user is logged in.
     };
     arrayOfMoviesFromSearch.push(movieObj);
-    console.log ("movieOBJ", arrayOfMoviesFromSearch);
+    // console.log ("movieOBJ", arrayOfMoviesFromSearch);
     templates.populatePage(arrayOfMoviesFromSearch);
     // console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
     });
@@ -90,16 +93,24 @@ function buildMovieObj(movie) {
 // Click function that trigger FB interactions & Reload DOM
 //////////////////////////////////////////////////////////////////////////
 
-// Send/Add to uid => FB & Reload
-$(document).on("click", ".save_new_btn", function() {
-    console.log("click save new movie");
-    let movieObj = buildMovieObj();
-    //call to database
-    db.addMovie(movieObj)
-        .then((movieID) => {
-            // loadMoviesToDOM();
-        });
+//when the use clicks the '+ My Movies' button, the array of returned API results are looped through to find a the object with matching movie ID from user click. That single movie object is then sent to Firebase.
+$(document).on("click", ".addToUserMovies", function(event) {
+    console.log("click save new movie", event.currentTarget.id);
+    
+    for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {   
+        if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
+            console.log ("FOUND A MATCH!");
+            console.log ("your chosen movie:", arrayOfMoviesFromSearch[i]);
+        }
+    }
 });
+
+    
+    //call to database
+    // db.addMovie(movieObj)
+    //     .then((movieID) => {
+            // loadMoviesToDOM();
+        // });
 
 // Edit & Add to uid => FB & Reload DOM
 // $(document).on("click", ".save_edit_btn", function() {
