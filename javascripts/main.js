@@ -100,7 +100,7 @@ $(document).on("click", ".addToUserMovies", function(event) {
     for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {   
         if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
             console.log ("FOUND A MATCH!");
-            console.log ("your chosen movie:", arrayOfMoviesFromSearch[i]);
+            db.addMovie(arrayOfMoviesFromSearch[i]);
         }
     }
 });
