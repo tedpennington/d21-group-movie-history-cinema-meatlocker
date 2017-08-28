@@ -2,8 +2,8 @@
 // console.log("db-interaction.js");
 
 
-let $ = require('jquery'),
-    firebase = require("./fb-Config");
+// let $ = require('jquery'),
+let firebase = require("./fb-Config");
 
 //NOTESl
 //For title search:

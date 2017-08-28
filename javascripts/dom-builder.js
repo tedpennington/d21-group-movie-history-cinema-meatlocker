@@ -1,6 +1,6 @@
 "use strict";
-let $ = require('jquery'),
-    db = require("./db-interaction"),
+// let $ = require('jquery'),
+    let db = require("./db-interaction"),
 	initialMovieTemplate = require("../templates/movie-template-before-tracked.hbs"),
 	templateAfterTracked = require("../templates/movie-template-after-tracked.hbs");
 
