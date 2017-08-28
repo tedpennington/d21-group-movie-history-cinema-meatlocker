@@ -1,8 +1,8 @@
 "use strict";
 
 
-let $ = require('jquery'),
-    db = require("./db-interaction"),
+// let $ = require('jquery'),
+    let db = require("./db-interaction"),
     templates = require("./dom-builder"),
     user = require("./user"),
     arrayOfMoviesFromSearch = [],
@@ -142,6 +142,8 @@ $(document).on("click", "#unwatched-btn", function(event) {
 //             // loadMoviesToDOM();
 //         });
 // });
+
+
 
 
 // Delete from DOM & uid in FB & Reload DOM
