@@ -57,10 +57,10 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
 // User login section and Display uid movies
 ////////////////////////////////////////////////////////
 $("#auth-btn").click(function() {
-    console.log("clicked auth");
+    // console.log("clicked auth");
     user.logInGoogle()
         .then((result) => {
-            console.log("result from login", result.user.uid);
+            // console.log("result from login", result.user.uid);
             user.setUser(result.user.uid);
             let currentUser = result.user.uid;
             $("#auth-btn").addClass("is-hidden");
@@ -71,7 +71,7 @@ $("#auth-btn").click(function() {
 
 // user logout
 $("#logout").click(() => {
-    console.log("logout clicked");
+    // console.log("logout clicked");
     user.logOut();
     $("#logout").addClass("is-hidden");
     $("#auth-btn").removeClass("is-hidden");
@@ -124,7 +124,7 @@ function buildMovieObj(movie) {
 
 //when the use clicks the '+ My Movies' button, the array of returned API results are looped through to find a the object with matching movie ID from user click. That single movie object is then sent to Firebase.
 $(document).on("click", ".addToUserMovies", function(event) {
-    console.log("click save new movie", event.currentTarget.id);
+    // console.log("click save new movie", event.currentTarget.id);
 
     for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
         if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
@@ -173,35 +173,35 @@ $(document).on("click", "#watched-btn", function(event) {
 //         });
 // });
 $(document).on("click", ".deleteFromMovies", function(event) {
-    console.log("click delete new movie", event.currentTarget.id);
+    // console.log("click delete new movie", event.currentTarget.id);
     let movieID = event.currentTarget.id;
             db.deleteMovie(movieID)
                 .then(() => {
                 loadMoviesToDOM();
                 // debugger;
-                console.log("you deleted movie", db.deleteMovie);
+                // console.log("you deleted movie", db.deleteMovie);
                 });
 });
 
 // Using the REST API
 function loadMoviesToDOM() {
-  console.log("starting loadMoviesToDom function");
+  // console.log("starting loadMoviesToDom function");
   let currentUser = user.getUser();
-  console.log("currentUser in loadMovies", currentUser);
+  // console.log("currentUser in loadMovies", currentUser);
   db.getMovies(currentUser)
   // db.getSongs()
   .then((movieData) => {
-    //with users, this is already happening...
     //add the id to each song and then build the song list
-    // var idArray = Object.keys(songData);
-    // idArray.forEach((key) => {
-    //   songData[key].id = key;
-    // });
-    // console.log("song object with id", songData);
+    var keysArray = Object.keys(movieData);
+    keysArray.forEach((key) => {
+      movieData[key].FBkey = key;
+    });
+    console.log("movie object with FB keys", movieData);
     //now make the list with songData
     templates.populatePageAfterTracked(movieData);
-    
-    console.log("loadMoviesToDOM", movieData);
+
+    // console.log("loadMoviesToDOM", movieData);
+
   });
 }
 

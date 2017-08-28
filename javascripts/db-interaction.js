@@ -19,7 +19,7 @@ let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d87141
 function getApiMovies() {
     return new Promise((resolve, reject) => {
         userInput = $("#dbSearch").val();
-        console.log("user input", userInput);
+        // console.log("user input", userInput);
         $.ajax({
             url: apiLink + userInput + "&page=1", //add cast here
             type: "GET",
@@ -64,7 +64,7 @@ function addCast(movieId) {
 
 //add user selected movies to Firebase:
 function addMovie(movieFormObj) {
-    console.log("addMovie", movieFormObj);
+    // console.log("addMovie", movieFormObj);
     return new Promise((resolve, reject) => {
         $.ajax({
             url: `${firebase.getFBsettings().databaseURL}/movies.json`,
@@ -80,11 +80,13 @@ function addMovie(movieFormObj) {
 
 //Delete movie from user list (and from database if no others users have added):
 function deleteMovie(movieId) {
+    console.log("movieId", movieId);
     return new Promise((resolve, reject) => {
         $.ajax({
             url: `${firebase.getFBsettings().databaseURL}/movies/${movieId}.json`,
             method: "DELETE"
-        }).done(() => {
+        }).done((theStuff) => {
+            console.log("theStuff", theStuff);
             resolve();
         });
     });
@@ -107,7 +109,7 @@ function getMovie(movieId) {
 //Get all movies
 function getMovies(user) {
     return new Promise ((resolve, reject) => {
-        console.log ("current URL value", `${firebase.getFBsettings().databaseURL}/movies.json?orderBy="uid"&equalTo="${user}"`);
+        // console.log ("current URL value", `${firebase.getFBsettings().databaseURL}/movies.json?orderBy="uid"&equalTo="${user}"`);
         $.ajax({
             url: `${firebase.getFBsettings().databaseURL}/movies.json?orderBy="uid"&equalTo="${user}"`
         }).done((movieData) => {
