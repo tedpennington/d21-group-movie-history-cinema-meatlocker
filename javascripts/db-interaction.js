@@ -95,12 +95,26 @@ function getMovie(movieId) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: `${firebase.getFBsettings().databaseURL}/movies/${movieId}.json`
+            // console.log (value);
         }).done((movieData) => {
             resolve(movieData);
         }).fail((error) => {
             reject(error);
         });
     });
+}
+
+//Get all movies
+function getMovies(user) {
+    return new Promise ((resolve, reject) => {
+        console.log ("current URL value", `${firebase.getFBsettings().databaseURL}/movies.json?orderBy="uid"&equalTo="${user}"`);
+        $.ajax({
+            url: `${firebase.getFBsettings().databaseURL}/movies.json?orderBy="uid"&equalTo="${user}"`
+        }).done((movieData) => {
+            resolve(movieData);
+        });
+    });
+
 }
 
 
@@ -126,6 +140,7 @@ module.exports = {
     addMovie,
     deleteMovie,
     getMovie,
+    getMovies,
     editMovies,
     addCast,
 };

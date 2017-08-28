@@ -11,6 +11,14 @@ let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
 
+// This is handling the RateYo rating functionality
+ // $(function () {
+ 
+ //            $(".rateYo").rateYo({
+ //                rating: 0,
+ //                fullStar: true
+ //            });
+ //        });
 
 
 //after user hits enter, load
@@ -82,7 +90,7 @@ function buildMovieObj(movie) {
     };
     arrayOfMoviesFromSearch.push(movieObj);
     // console.log ("movieOBJ", arrayOfMoviesFromSearch);
-    templates.populatePage(arrayOfMoviesFromSearch);
+    templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
     // console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
     });
     // return movieObj;
@@ -99,10 +107,18 @@ $(document).on("click", ".addToUserMovies", function(event) {
     
     for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {   
         if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-            console.log ("FOUND A MATCH!");
+            // console.log ("FOUND A MATCH!");
             db.addMovie(arrayOfMoviesFromSearch[i]);
         }
     }
+});
+
+
+//button to show only movies added to 'tracked' by the user
+$(document).on("click", "#unwatched-btn", function(event) {    
+    console.log ("clicked unwatched");
+    loadMoviesToDOM();
+    // console.log("click save new movie", event.currentTarget.id);
 });
 
     
@@ -133,3 +149,28 @@ $(document).on("click", ".delete-btn", function() {
             // loadMoviesToDOM();
         });
 });
+
+
+// Using the REST API
+function loadMoviesToDOM() {
+  console.log("starting loadMoviesToDom function");
+  let currentUser = user.getUser();
+  console.log("currentUser in loadMovies", currentUser);
+  db.getMovies(currentUser)
+  // db.getSongs()
+  .then((movieData) => {
+    console.log("got data", movieData);
+    //with users, this is already happening...
+    //add the id to each song and then build the song list
+    // var idArray = Object.keys(songData);
+    // idArray.forEach((key) => {
+    //   songData[key].id = key;
+    // });
+    // console.log("song object with id", songData);
+    //now make the list with songData
+    templates.populatePageAfterTracked(movieData);
+  });
+}
+
+
+
