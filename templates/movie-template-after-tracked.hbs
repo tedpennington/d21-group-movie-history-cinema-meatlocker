@@ -3,16 +3,17 @@
 <div class="col-lg-3" id="movie--{{@index}}">
       <img class="card-img-top" src="https://image.tmdb.org/t/p/w300/{{poster}}" alt="Image Coming Soon!">
       <div class="card-block">
+      {{!-- <div class="rateStars">{{ratingHelper rating}}</div> --}}
           <h4 class="card-title">{{title}}</h4>
           <p class="card-text">Released: {{year}}</p>
           <p class="card-text">Starring: {{actors}}</p>
-          
+
           <nav aria-label="...">
-           <button class="deleteFromMovies" id="delete--{{id}}" type="button"><a href="#">Delete</a><span class="sr-only">(current)</span></button>
+           <button class="deleteFromMovies" id="{{id}}" type="button"><a href="#">Delete</a><span class="sr-only">(current)</span></button>
            <button class="addToWatchedMovies" id="watched--{{id}}" type="button"><a href="#">I watched this!</a><span class="sr-only">(current)</span></button>
 		  </nav>
       </div>
-   
+
 </div>
 
 {{/each}}
