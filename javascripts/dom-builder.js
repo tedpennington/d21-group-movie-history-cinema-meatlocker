@@ -22,6 +22,17 @@ function populatePageAfterTracked(arrayOfMovies) {
     let ourDiv = document.getElementById("forHandlebarsInsert");
     ourDiv.innerHTML = templateAfterTracked(arrayOfMovies);
     // $("#attraction-column").append(newDiv);
+    $(".rateYo").rateYo({
+    numStars: 10,
+    maxValue: 10,
+    rating: "0",
+    starWidth: "20px",
+    fullStar: true
+  })
+              .on("rateyo.set", function (e, data) {
+ 
+                  console.log("The rating is set to " + data.rating + "!");
+              });
 }
 
 module.exports = {populatePageBeforeTracked, populatePageAfterTracked};
