@@ -12,6 +12,23 @@ let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
 
+////////////////////////////////////////////////////////
+// Slider things
+////////////////////////////////////////////////////////
+
+    /***Slider***/
+        var slider = document.getElementById("mySlider");
+        var output = document.getElementById("sliderPut");
+        output.innerHTML = ("Stars: " + slider.value); // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        slider.oninput = function() {
+            output.innerHTML = ("Stars: " + this.value);
+        };
+
+
+    /******/
+
 
 //after user hits enter, load
 document.getElementById("dbSearch").addEventListener("keyup", function(event) {
@@ -119,8 +136,8 @@ $(document).on("click", ".addToUserMovies", function(event) {
 
 
 //button to show only movies added to 'tracked' by the user
-$(document).on("click", "#unwatched-btn", function(event) {
-    console.log ("clicked unwatched");
+$(document).on("click", "#watched-btn", function(event) {
+    console.log ("clicked watched");
     loadMoviesToDOM();
     // console.log("click save new movie", event.currentTarget.id);
 });
@@ -183,6 +200,7 @@ function loadMoviesToDOM() {
     // console.log("song object with id", songData);
     //now make the list with songData
     templates.populatePageAfterTracked(movieData);
+    
     console.log("loadMoviesToDOM", movieData);
   });
 }
