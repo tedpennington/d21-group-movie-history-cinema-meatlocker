@@ -5,20 +5,12 @@ let $ = require('jquery'),
     db = require("./db-interaction"),
     templates = require("./dom-builder"),
     user = require("./user"),
-    arrayOfMoviesFromSearch = [];
+    arrayOfMoviesFromSearch = [],
+    Handlebars = require('hbsfy/runtime');
 
 let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
-
-// This is handling the RateYo rating functionality
- // $(function () {
- 
- //            $(".rateYo").rateYo({
- //                rating: 0,
- //                fullStar: true
- //            });
- //        });
 
 
 //after user hits enter, load
@@ -28,14 +20,14 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
        event.preventDefault();
 //The below two lines clear the HTML and movie array so that each new search will present only movies that match the latest search
         $("#forHandlebarsInsert").html();
-        
+
 
         db.getApiMovies()
             .then(function(movieData) {
                 movieData.results.forEach(function(movie) {
                     arrayOfMoviesFromSearch = [];
                     buildMovieObj(movie);
-                    console.log("movie", movie);
+                    // console.log("movie", movie);
 
                 });
             });
@@ -92,8 +84,20 @@ function buildMovieObj(movie) {
     // console.log ("movieOBJ", arrayOfMoviesFromSearch);
     templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
     // console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
+    // This is handling the RateYo rating functionality
     });
     // return movieObj;
+    // console.log($(".rateStars"));
+    // // debugger;
+    // Handlebars.registerHelper("ratingHelper", (value) => {
+    //  $(".rateStars").rateYo({
+    //     numStars: 10,
+    //     maxValue: 10,
+    //     rating: 0,
+    //     // starWidth: ,
+    //     fullStar: true
+    //     });
+    // });
 }
 
 
@@ -104,8 +108,8 @@ function buildMovieObj(movie) {
 //when the use clicks the '+ My Movies' button, the array of returned API results are looped through to find a the object with matching movie ID from user click. That single movie object is then sent to Firebase.
 $(document).on("click", ".addToUserMovies", function(event) {
     console.log("click save new movie", event.currentTarget.id);
-    
-    for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {   
+
+    for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
         if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
             // console.log ("FOUND A MATCH!");
             db.addMovie(arrayOfMoviesFromSearch[i]);
@@ -115,13 +119,13 @@ $(document).on("click", ".addToUserMovies", function(event) {
 
 
 //button to show only movies added to 'tracked' by the user
-$(document).on("click", "#unwatched-btn", function(event) {    
+$(document).on("click", "#unwatched-btn", function(event) {
     console.log ("clicked unwatched");
     loadMoviesToDOM();
     // console.log("click save new movie", event.currentTarget.id);
 });
 
-    
+
     //call to database
     // db.addMovie(movieObj)
     //     .then((movieID) => {
@@ -141,15 +145,24 @@ $(document).on("click", "#unwatched-btn", function(event) {
 
 
 // Delete from DOM & uid in FB & Reload DOM
-$(document).on("click", ".delete-btn", function() {
-    console.log("clicked delete movie", $(this).data("delete-id"));
-    let movieID = $(this).data("delete-id");
-    db.deletemovie(movieID)
-        .then(() => {
-            // loadMoviesToDOM();
-        });
+// $(document).on("click", ".delete-btn", function() {
+//     console.log("clicked delete movie", $(this).data("delete-id"));
+//     let movieID = $(this).data("delete-id");
+//     db.deletemovie(movieID)
+//         .then(() => {
+//             // loadMoviesToDOM();
+//         });
+// });
+$(document).on("click", ".deleteFromMovies", function(event) {
+    console.log("click delete new movie", event.currentTarget.id);
+    let movieID = event.currentTarget.id;
+            db.deleteMovie(movieID)
+                .then(() => {
+                loadMoviesToDOM();
+                // debugger;
+                console.log("you deleted movie", db.deleteMovie);
+                });
 });
-
 
 // Using the REST API
 function loadMoviesToDOM() {
@@ -159,7 +172,6 @@ function loadMoviesToDOM() {
   db.getMovies(currentUser)
   // db.getSongs()
   .then((movieData) => {
-    console.log("got data", movieData);
     //with users, this is already happening...
     //add the id to each song and then build the song list
     // var idArray = Object.keys(songData);
@@ -169,6 +181,7 @@ function loadMoviesToDOM() {
     // console.log("song object with id", songData);
     //now make the list with songData
     templates.populatePageAfterTracked(movieData);
+    console.log("loadMoviesToDOM", movieData);
   });
 }
 
