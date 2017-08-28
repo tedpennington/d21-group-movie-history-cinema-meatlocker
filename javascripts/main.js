@@ -1,8 +1,8 @@
 "use strict";
 
 
-let $ = require('jquery'),
-    db = require("./db-interaction"),
+// let $ = require('jquery'),
+    let db = require("./db-interaction"),
     templates = require("./dom-builder"),
     user = require("./user"),
     arrayOfMoviesFromSearch = [];
@@ -10,15 +10,6 @@ let $ = require('jquery'),
 let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
 
-
-// This is handling the RateYo rating functionality
- // $(function () {
- 
- //            $(".rateYo").rateYo({
- //                rating: 0,
- //                fullStar: true
- //            });
- //        });
 
 
 //after user hits enter, load
@@ -138,6 +129,8 @@ $(document).on("click", "#unwatched-btn", function(event) {
 //             // loadMoviesToDOM();
 //         });
 // });
+
+
 
 
 // Delete from DOM & uid in FB & Reload DOM
