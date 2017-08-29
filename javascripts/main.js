@@ -94,6 +94,7 @@ function buildMovieObj(movie) {
     // db.addCast(movie.id)
     //     .then((result) => {
     
+    //truncate movie release date to show only release year
     let movieYear;
     if (movie.release_date) {
         movieYear = movie.release_date.slice(0, 4);
@@ -101,6 +102,7 @@ function buildMovieObj(movie) {
         movieYear = "Release date not listed";
     }
 
+    //determine if movie has poster, insert urls for poster if so, and insert urls for blank poster if not
     let largePoster;
     let smallPoster;
     if (movie.poster_path) {
@@ -111,6 +113,8 @@ function buildMovieObj(movie) {
         smallPoster = "./img/posterDefaultSmall.jpg";
     }
 
+
+    //build movie object
     let movieObj = {
         //movie id #
         id: movie.id,
@@ -197,10 +201,12 @@ $(document).on("click", "#watched-btn", function(event) {
     // console.log("click save new movie", event.currentTarget.id);
 });
 
-// class="open-modal btn btn-info btn-lg"
+
+
+//button and associated function to open modal for movie details and trigger population of modal
 $(document).on("click", ".modal-open-button", function(event) {
-    console.log(event);
-    console.log("open modal clicked - event:", event.currentTarget.getAttribute("movie-id"));
+    // console.log(event);
+    // console.log("open modal clicked - event:", event.currentTarget.getAttribute("movie-id"));
 
     let movieID = event.currentTarget.getAttribute("movie-id");
 
@@ -218,13 +224,11 @@ $(document).on("click", ".modal-open-button", function(event) {
 });
 
 
-
+// function to find movie in arrayOfMoviesFromSearch to display in modal 
 function findMovieForModal (movieID) {   
-
     let selectedMovie = arrayOfMoviesFromSearch.find((array) => {
                         return(array.id == movieID);
                         });
-
     return selectedMovie;
 }
 
