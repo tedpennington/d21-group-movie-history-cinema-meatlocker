@@ -2,7 +2,9 @@
 // let $ = require('jquery'),
     let db = require("./db-interaction"),
 	initialMovieTemplate = require("../templates/movie-template-before-tracked.hbs"),
-	templateAfterTracked = require("../templates/movie-template-after-tracked.hbs");
+	templateAfterTracked = require("../templates/movie-template-after-tracked.hbs"),
+    modalBeforeTracked = require("../templates/modal-template-before-tracked.hbs"),
+    modalAfterTracked = require("../templates/modal-template-after-tracked.hbs");
 
 console.log ("dom-builder");
 
@@ -46,6 +48,23 @@ function populatePageAfterTracked(arrayOfMovies) {
               });
 }
 
+function populateModalBeforeTracked(selectedMovie) {
+    $(".modal-body").html(modalBeforeTracked(selectedMovie));
+}
 
-module.exports = {populatePageBeforeTracked, populatePageAfterTracked};
+function populateModalAfterTracked(selectedMovie) {
+    $(".modal-body").html(modalBeforeTracked(selectedMovie));
+    $(".rateYo").rateYo({
+    numStars: 10,
+    maxValue: 10,
+    rating: "0",
+    starWidth: "25px",
+    fullStar: true
+  })
+    .on("rateyo.set", function (e, data) {
+        console.log("The rating is set to " + data.rating + "!");
+    });
+}
+
+module.exports = {populatePageBeforeTracked, populatePageAfterTracked, populateModalBeforeTracked, populateModalAfterTracked};
 

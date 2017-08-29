@@ -148,6 +148,7 @@ function buildMovieObj(movie) {
     // db.addCast(movie.id)
     //     .then((result) => {
     
+    //truncate movie release date to show only release year
     let movieYear;
     if (movie.release_date) {
         movieYear = movie.release_date.slice(0, 4);
@@ -155,11 +156,26 @@ function buildMovieObj(movie) {
         movieYear = "Release date not listed";
     }
 
+    //determine if movie has poster, insert urls for poster if so, and insert urls for blank poster if not
+    let largePoster;
+    let smallPoster;
+    if (movie.poster_path) {
+        largePoster = "https://image.tmdb.org/t/p/w342/" + movie.poster_path;
+        smallPoster = "https://image.tmdb.org/t/p/w185/" + movie.poster_path;
+    } else {
+        largePoster = "./img/posterDefaultLarge.jpg";
+        smallPoster = "./img/posterDefaultSmall.jpg";
+    }
+
+
+    //build movie object
     let movieObj = {
         //movie id #
         id: movie.id,
         title: movie.title,
-        poster: movie.poster_path,
+        poster_path: movie.poster_path,
+        largeposter: largePoster,
+        smallposter: smallPoster,
         overview: movie.overview,
         year: movieYear,
         // actors: result,
@@ -240,8 +256,11 @@ $(document).on("click", "#watched-btn", function(event) {
 });
 
 
-$(document).on("click", ".open-modal", function(event) {
-    console.log("open modal clicked - event:", event.currentTarget.getAttribute("movie-id"));
+
+//button and associated function to open modal for movie details and trigger population of modal
+$(document).on("click", ".modal-open-button", function(event) {
+    // console.log(event);
+    // console.log("open modal clicked - event:", event.currentTarget.getAttribute("movie-id"));
 
     let movieID = event.currentTarget.getAttribute("movie-id");
 
@@ -249,36 +268,21 @@ $(document).on("click", ".open-modal", function(event) {
     .then((castOutput) => {
 
         let movieObjectForModal = findMovieForModal(movieID);
+        movieObjectForModal.cast = castOutput;
+
         console.log("movieToDisplay", movieObjectForModal);
-
-        let modalMovieDisplay = `<img src="https://image.tmdb.org/t/p/w185/${movieObjectForModal.poster}">
-                                <p>${movieObjectForModal.title}</p>
-                                <p>${castOutput}</p>
-                                <p>${movieObjectForModal.overview}</p>
-                                <p>${movieObjectForModal.year}</p>`;
-
-
-         $(".modal-body").html(modalMovieDisplay);
-
-        // for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
-        //     if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-        //         // console.log ("FOUND A MATCH!");
-        //         db.addMovie(arrayOfMoviesFromSearch[i]);
-        //     }
-        // }
-
-
+        templates.populateModalBeforeTracked(movieObjectForModal);
+        
     });
+
 });
 
 
-
+// function to find movie in arrayOfMoviesFromSearch to display in modal 
 function findMovieForModal (movieID) {   
-
     let selectedMovie = arrayOfMoviesFromSearch.find((array) => {
                         return(array.id == movieID);
                         });
-
     return selectedMovie;
 }
 
