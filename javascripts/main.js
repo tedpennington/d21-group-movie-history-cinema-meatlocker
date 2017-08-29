@@ -101,11 +101,23 @@ function buildMovieObj(movie) {
         movieYear = "Release date not listed";
     }
 
+    let largePoster;
+    let smallPoster;
+    if (movie.poster_path) {
+        largePoster = "https://image.tmdb.org/t/p/w342/" + movie.poster_path;
+        smallPoster = "https://image.tmdb.org/t/p/w185/" + movie.poster_path;
+    } else {
+        largePoster = "./img/posterDefaultLarge.jpg";
+        smallPoster = "./img/posterDefaultSmall.jpg";
+    }
+
     let movieObj = {
         //movie id #
         id: movie.id,
         title: movie.title,
-        poster: movie.poster_path,
+        poster_path: movie.poster_path,
+        largeposter: largePoster,
+        smallposter: smallPoster,
         overview: movie.overview,
         year: movieYear,
         // actors: result,
@@ -195,16 +207,21 @@ $(document).on("click", ".open-modal", function(event) {
     .then((castOutput) => {
 
         let movieObjectForModal = findMovieForModal(movieID);
+
+        movieObjectForModal.cast = castOutput;
+
         console.log("movieToDisplay", movieObjectForModal);
 
-        let modalMovieDisplay = `<img src="https://image.tmdb.org/t/p/w185/${movieObjectForModal.poster}">
-                                <p>${movieObjectForModal.title}</p>
-                                <p>${castOutput}</p>
-                                <p>${movieObjectForModal.overview}</p>
-                                <p>${movieObjectForModal.year}</p>`;
+        templates.populateModalBeforeTracked(movieObjectForModal);
+
+        // let modalMovieDisplay = `<img src="${movieObjectForModal.largeposter}">
+        //                         <p>${movieObjectForModal.title}</p>
+        //                         <p>${castOutput}</p>
+        //                         <p>${movieObjectForModal.overview}</p>
+        //                         <p>${movieObjectForModal.year}</p>`;
 
 
-         $(".modal-body").html(modalMovieDisplay);
+        //  $(".modal-body").html(modalMovieDisplay);
 
         // for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
         //     if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
