@@ -40,6 +40,9 @@ let apiKeyEnd = "/credits?api_key=dbe82c339d871418f3be9db2647bb249";
 // https://api.themoviedb.org/3/movie/674/credits?api_key=dbe82c339d871418f3be9db2647bb249
 
 function addCast(movieId) {
+
+    console.log("addCast triggered");
+
     return new Promise((resolve, reject) => {
 
         userInput = $("#dbSearch").val();
@@ -49,15 +52,48 @@ function addCast(movieId) {
             dataType: "json"
         }).done((response) => {
             console.log('cast response: ', response);
+            let castArray = [];
             let castOutput = "";
 
-            // loop through response and get first 5 items
-            // loop over them again create <li></li>
-            // assign those items to getElementById
-            for (let i = 0; i < 5 ; i++) {
-                castOutput += `${response.cast[i].name}` + " ";
-            }
+            // check to see if cast response is null
+            if (response) {
 
+                // loop through response and get first 5 items (or fewer), if present
+                let counter = 0;
+
+                if (response.cast.length < 5) {
+                    counter = response.cast.length;
+                } else {
+                    counter = 5;
+                }
+
+                for (let i = 0; i < counter ; i++) {
+                    castArray.push(response.cast[i].name);
+                }
+
+                // console.log("castArray", castArray);
+                if (castArray.length == 0) {
+                    castOutput = "Cast not listed";
+                } else {
+                    // take cast array info and put into string with commas between names
+                    for (let j = 0; j < castArray.length; j++) {
+                        // console.log("castArray", castArray);
+                        if (j < (castArray.length - 1)) {
+                            // console.log("if was true");
+                        castOutput += castArray[j] + ", ";
+                        } else {
+                            castOutput += castArray[j];
+                        }
+                        // console.log("castArray", castArray);
+                    }
+                }    
+
+                // console.log("castOutput", castOutput);
+
+            } else {
+                console.log("cast search response is null");
+                castOutput = "Cast not listed";
+            }
             
             resolve(castOutput);
         });

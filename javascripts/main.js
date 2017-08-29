@@ -48,8 +48,13 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                     // console.log("movie", movie);
 
                 });
-
-                console.log("arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
+                console.log("arrayOfMoviesFromSearch at end of search:", arrayOfMoviesFromSearch);
+                if(arrayOfMoviesFromSearch.length === 0){
+                    console.log("no movies found");
+                    $("#forHandlebarsInsert").html(`<div id="null-search"><h1>No results found!</h1></div>`);
+                } else {
+                    console.log("FOUND arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
+                }
             });
     }
 });
@@ -78,6 +83,7 @@ $("#logout").click(() => {
     user.logOut();
     $("#logout").addClass("is-hidden");
     $("#auth-btn").removeClass("is-hidden");
+    $("#forHandlebarsInsert").html(`<div id="logout-message"><h1>Logged Out!</h1></div>`);
 });
 
 
@@ -87,16 +93,33 @@ $("#logout").click(() => {
 function buildMovieObj(movie) {
     // db.addCast(movie.id)
     //     .then((result) => {
+    
+    let movieYear;
+    if (movie.release_date) {
+        movieYear = movie.release_date.slice(0, 4);
+    } else {
+        movieYear = "Release date not listed";
+    }
 
-    // let movieYear = movie.release_date.slice(0, 4);
+    let largePoster;
+    let smallPoster;
+    if (movie.poster_path) {
+        largePoster = "https://image.tmdb.org/t/p/w342/" + movie.poster_path;
+        smallPoster = "https://image.tmdb.org/t/p/w185/" + movie.poster_path;
+    } else {
+        largePoster = "./img/posterDefaultLarge.jpg";
+        smallPoster = "./img/posterDefaultSmall.jpg";
+    }
 
     let movieObj = {
         //movie id #
         id: movie.id,
         title: movie.title,
-        poster: movie.poster_path,
+        poster_path: movie.poster_path,
+        largeposter: largePoster,
+        smallposter: smallPoster,
         overview: movie.overview,
-        year: movie.release_date.slice(0, 4),
+        year: movieYear,
         // actors: result,
         watch: false,
         watched: false,
@@ -193,18 +216,43 @@ let thisTarjeh = null;
 //when the use clicks the '+ My Movies' button, the array of returned API results are looped through to find a the object with matching movie ID from user click. That single movie object is then sent to Firebase.
 $(document).on("click", ".addToUserMovies", function(event) {
 
-    // console.log("click save new movie", event.currentTarget.id);
+    // // console.log("click save new movie", event.currentTarget.id);
     
-    console.log("event for click on add movie", event);
-    console.log("click save new movie", event.currentTarget.id);
+    // console.log("event for click on add movie", event);
+    // console.log("click save new movie", event.currentTarget.id);
+    // console.log("user.getUser()", user.getUser());
+    if(user.getUser() == null) {
+         user.logInGoogle()
+        .then((result) => {
+            // console.log("result from login", result.user.uid);
+            user.setUser(result.user.uid);
+            let currentUser = result.user.uid;
+            $("#auth-btn").addClass("is-hidden");
+            $("#logout").removeClass("is-hidden");
+            db.getApiMovies()
+            .then(function(movieData) {
+                movieData.results.forEach(function(movie) {
+                    // arrayOfMoviesFromSearch = [];
+                    buildMovieObj(movie);
+                    // console.log("movie", movie);
 
-    $(this).attr('disabled', true);
+                });
 
-    for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
-        if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-            // console.log ("FOUND A MATCH!");
-            db.addMovie(arrayOfMoviesFromSearch[i]);
-        }
+            });
+
+
+
+            $(this).attr('disabled', true);
+
+            for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
+            if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
+
+                    // console.log ("FOUND A MATCH!");
+                    db.addMovie(arrayOfMoviesFromSearch[i]);
+
+                }
+            }
+        });
     }
 });
 
@@ -217,29 +265,24 @@ $(document).on("click", "#watched-btn", function(event) {
     // console.log("click save new movie", event.currentTarget.id);
 });
 
-
-$(document).on("click", ".open-modal", function(event) {
+// class="open-modal btn btn-info btn-lg"
+$(document).on("click", ".modal-open-button", function(event) {
+    console.log(event);
     console.log("open modal clicked - event:", event.currentTarget.getAttribute("movie-id"));
 
     let movieID = event.currentTarget.getAttribute("movie-id");
 
-    let movieObjectForModal = findMovieForModal(movieID);
-    console.log("movieToDisplay", movieObjectForModal);
+    db.addCast(movieID)
+    .then((castOutput) => {
 
-    let modalMovieDisplay = `<p>${movieObjectForModal.title}</p>
-                            <p>https://image.tmdb.org/t/p/w185/${movieObjectForModal.poster}</p>
-                            <p>${movieObjectForModal.overview}</p>
-                            <p>${movieObjectForModal.year}</p>`;
+        let movieObjectForModal = findMovieForModal(movieID);
+        movieObjectForModal.cast = castOutput;
 
+        console.log("movieToDisplay", movieObjectForModal);
+        templates.populateModalBeforeTracked(movieObjectForModal);
+        
+    });
 
-     $(".modal-body").html(modalMovieDisplay);
-
-    // for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
-    //     if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-    //         // console.log ("FOUND A MATCH!");
-    //         db.addMovie(arrayOfMoviesFromSearch[i]);
-    //     }
-    // }
 });
 
 
