@@ -7,6 +7,19 @@
     user = require("./user"),
     arrayOfMoviesFromSearch = [],
     Handlebars = require('hbsfy/runtime');
+    let Fuse = require("../lib/node_modules/fuse.js/dist/fuse.min.js");
+
+// ***Options for fuse.js search****
+var options = {
+    tokenize: true,
+    shouldSort: true,
+    threshold: 0.0,
+    location: 0,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 4,
+    keys: ["title"]
+};
 
 let userInput = "";
 let apiLink = "https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=";
@@ -38,24 +51,65 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
 //The below two lines clear the HTML and movie array so that each new search will present only movies that match the latest search
         $("#forHandlebarsInsert").html();
         arrayOfMoviesFromSearch = [];
+        let combinedArray = [];
+        // If there's a user, just search the API and return results
+        if(user.getUser() == null) {
+            db.getApiMovies()
+                .then(function(movieData) {
+                    movieData.forEach(function(movie) {
+                        // arrayOfMoviesFromSearch = [];
+                        buildMovieObj(movie);
+                        // console.log("movie", movie);
+                        templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
 
-
-        db.getApiMovies()
-            .then(function(movieData) {
-                movieData.results.forEach(function(movie) {
-                    // arrayOfMoviesFromSearch = [];
-                    buildMovieObj(movie);
-                    // console.log("movie", movie);
-
+                    });
+                    console.log("arrayOfMoviesFromSearch at end of search:", arrayOfMoviesFromSearch);
+                    // If there are no results, say so
+                    if(arrayOfMoviesFromSearch.length === 0){
+                        console.log("no movies found");
+                        $("#forHandlebarsInsert").html(`<div id="null-search"><h1>No results found!</h1></div>`);
+                    } else {
+                        console.log("FOUND arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
+                    }
                 });
-                console.log("arrayOfMoviesFromSearch at end of search:", arrayOfMoviesFromSearch);
-                if(arrayOfMoviesFromSearch.length === 0){
-                    console.log("no movies found");
-                    $("#forHandlebarsInsert").html(`<div id="null-search"><h1>No results found!</h1></div>`);
-                } else {
-                    console.log("FOUND arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
-                }
-            });
+            }else {
+                db.getApiMovies()
+                .then(function(movieData) {
+                    return new Promise ((resolve, reject) => {
+                        movieData.forEach(function(movie) {
+                            // arrayOfMoviesFromSearch = [];
+                            buildMovieObj(movie);
+                            // console.log("movie", movie);
+                            // templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
+                            //First, put the API movies into the combined array:
+                            combinedArray = arrayOfMoviesFromSearch;
+                         });
+                        // console.log("combinedArray after api search", combinedArray);
+                        resolve (combinedArray);
+                    });
+                })
+                .then(function(combinedArray) {
+                    db.getMovies(user.getUser())
+                    .then(function(userMovies) {
+                            console.log("userMovies", userMovies);
+                            // combinedArray = userMovies.concat(combinedArray);
+                            console.log("combinedArray before combined", combinedArray);
+                            Object.keys(userMovies).forEach((key)=> {
+                                combinedArray.unshift(userMovies[key]);
+                            });
+                            console.log("combinedArray after combined", combinedArray);
+
+                            templates.populatePageBeforeTracked(combinedArray);
+                            // If there are no results, say so
+                            if(combinedArray.length === 0){
+                                console.log("no movies found");
+                                $("#forHandlebarsInsert").html(`<div id="null-search"><h1>No results found!</h1></div>`);
+                            } else {
+                                console.log("FOUND some:", combinedArray);
+                            }
+                        });
+                });
+            }
     }
 });
 
@@ -132,7 +186,7 @@ function buildMovieObj(movie) {
     };
     arrayOfMoviesFromSearch.push(movieObj);
     // console.log ("movieOBJ", arrayOfMoviesFromSearch);
-    templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
+    // templates.populatePageBeforeTracked(arrayOfMoviesFromSearch); ***Moved***
     // console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
     // This is handling the RateYo rating functionality
     // });
@@ -173,7 +227,7 @@ $(document).on("click", ".addToUserMovies", function(event) {
             $("#logout").removeClass("is-hidden");
             db.getApiMovies()
             .then(function(movieData) {
-                movieData.results.forEach(function(movie) {
+                movieData.forEach(function(movie) {
                     // arrayOfMoviesFromSearch = [];
                     buildMovieObj(movie);
                     // console.log("movie", movie);
@@ -259,17 +313,15 @@ function findMovieForModal (movieID) {
 //     let movieID = $(this).data("delete-id");
 //     db.deletemovie(movieID)
 //         .then(() => {
-//             // loadMoviesToDOM();
+            // loadMoviesToDOM();
 //         });
 // });
 $(document).on("click", ".deleteFromMovies", function(event) {
-    // console.log("click delete new movie", event.currentTarget.id);
+    console.log("event.currentTarget.id", event.currentTarget.id);
     let movieID = event.currentTarget.id;
             db.deleteMovie(movieID)
                 .then(() => {
                 loadMoviesToDOM();
-                // debugger;
-                // console.log("you deleted movie", db.deleteMovie);
                 });
 });
 
