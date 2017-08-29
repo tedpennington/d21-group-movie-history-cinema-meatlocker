@@ -197,8 +197,9 @@ $(document).on("click", "#watched-btn", function(event) {
     // console.log("click save new movie", event.currentTarget.id);
 });
 
-
-$(document).on("click", ".open-modal", function(event) {
+// class="open-modal btn btn-info btn-lg"
+$(document).on("click", ".modal-open-button", function(event) {
+    console.log(event);
     console.log("open modal clicked - event:", event.currentTarget.getAttribute("movie-id"));
 
     let movieID = event.currentTarget.getAttribute("movie-id");
