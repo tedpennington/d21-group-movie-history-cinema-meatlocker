@@ -93,6 +93,12 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                     .then(function(userMovies) {
                             console.log("userMovies", userMovies);
                             // combinedArray = userMovies.concat(combinedArray);
+                            //Do the search to the user movies and return filtered results
+                            var fuse = new Fuse(userMovies, options);
+                            var result = fuse.search($("#dbSearch").val());
+                            console.log("fuse object", fuse);
+                            console.log("fuse search result", result);
+                            userMovies = result;
                             console.log("combinedArray before combined", combinedArray);
                             Object.keys(userMovies).forEach((key)=> {
                                 combinedArray.unshift(userMovies[key]);
