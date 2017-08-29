@@ -22,11 +22,15 @@ firebase.auth().onAuthStateChanged((user) => {
 //login
 function logInGoogle() {
     //Add a .then when called
+    $("#auth-btn").attr('disabled', true);
+	$("#logout").attr('disabled', false);
     return firebase.auth().signInWithPopup(provider);
 }
 
 //logout
 function logOut() {
+    $("#auth-btn").attr('disabled', false);
+	$("#logout").attr('disabled', true);
     return firebase.auth().signOut();
 }
 

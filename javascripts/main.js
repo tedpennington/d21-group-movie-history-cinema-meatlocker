@@ -125,6 +125,68 @@ function buildMovieObj(movie) {
 
 
 //////////////////////////////////////////////////////////////////////////
+// Button Disables
+//////////////////////////////////////////////////////////////////////////
+
+let thisTarjeh = null;
+
+
+//Click Funtion for Untracked button
+    $("#untracked-btn").click(function(){
+        console.log("clicked on untracked-btn toggle button");
+        if (thisTarjeh === null) {
+            console.log("untracked if statement running");
+            $(this).siblings().attr('disabled', false);
+            thisTarjeh = $(this);
+            console.log("thisTarjeh = ", thisTarjeh);
+        }else{
+            console.log("untracked-btn else statement running");
+            thisTarjeh.siblings().attr('disabled', false);
+            thisTarjeh = $(this);
+            thisTarjeh.siblings().attr('disabled', false);
+        }
+        $("#untracked-btn").attr('disabled', true);
+    });
+
+    //Click Funtion for Watched button
+    $("#watched-btn").click(function(){
+        console.log("clicked on Watched toggle button");
+        if (thisTarjeh === null) {
+            console.log("watched if statement running");
+            $(this).siblings().attr('disabled', false);
+            thisTarjeh = $(this);
+            console.log("thisTarjeh = ", thisTarjeh);
+        }else{
+            console.log("watched else statement running");
+            thisTarjeh.siblings().attr('disabled', false);
+            thisTarjeh = $(this);
+            thisTarjeh.siblings().attr('disabled', false);
+        }
+        $("#watched-btn").attr('disabled', true);
+    });
+
+    //Click Funtion for Unwatched button
+    $("#unwatched-btn").click(function(){ 
+        console.log("clicked on Unwatched toggle button");
+        if (thisTarjeh === null) {
+            console.log("unwatched if statement running");
+            $(this).siblings().attr('disabled', false);
+            thisTarjeh = $(this);
+            console.log("thisTarjeh = ", thisTarjeh);
+        }else{
+            console.log("unwatched else statement running");
+            thisTarjeh.siblings().attr('disabled', false);
+            thisTarjeh = $(this);
+            thisTarjeh.siblings().attr('disabled', false);
+        }
+        $("#unwatched-btn").attr('disabled', true);
+    });
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
 // Click function that trigger FB interactions & Reload DOM
 //////////////////////////////////////////////////////////////////////////
 
@@ -136,6 +198,8 @@ $(document).on("click", ".addToUserMovies", function(event) {
     console.log("event for click on add movie", event);
     console.log("click save new movie", event.currentTarget.id);
 
+    $(this).attr('disabled', true);
+
     for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
         if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
             // console.log ("FOUND A MATCH!");
@@ -143,6 +207,7 @@ $(document).on("click", ".addToUserMovies", function(event) {
         }
     }
 });
+
 
 
 //button to show only movies added to 'tracked' by the user
