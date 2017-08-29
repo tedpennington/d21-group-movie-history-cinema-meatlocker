@@ -25,7 +25,7 @@ function getApiMovies() {
             type: "GET",
             dataType: "json"
         }).done((response) => {
-            // console.log("getApiMovies response: ", response);
+            console.log("getApiMovies response: ", response);
             resolve(response);
         });
 
@@ -48,7 +48,7 @@ function addCast(movieId) {
             type: "GET",
             dataType: "json"
         }).done((response) => {
-            // console.log('cast response: ', response);
+            console.log('cast response: ', response);
             let castOutput = "";
 
             // loop through response and get first 5 items
@@ -57,6 +57,8 @@ function addCast(movieId) {
             for (let i = 0; i < 5 ; i++) {
                 castOutput += `${response.cast[i].name}` + " ";
             }
+
+            
             resolve(castOutput);
         });
     });

@@ -37,16 +37,19 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
        event.preventDefault();
 //The below two lines clear the HTML and movie array so that each new search will present only movies that match the latest search
         $("#forHandlebarsInsert").html();
+        arrayOfMoviesFromSearch = [];
 
 
         db.getApiMovies()
             .then(function(movieData) {
                 movieData.results.forEach(function(movie) {
-                    arrayOfMoviesFromSearch = [];
+                    // arrayOfMoviesFromSearch = [];
                     buildMovieObj(movie);
                     // console.log("movie", movie);
 
                 });
+
+                console.log("arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
             });
     }
 });
@@ -82,16 +85,19 @@ $("#logout").click(() => {
 // Build Object
 ////////////////////////////////////////////////////////
 function buildMovieObj(movie) {
-    db.addCast(movie.id)
-        .then((result) => {
+    // db.addCast(movie.id)
+    //     .then((result) => {
+
+    // let movieYear = movie.release_date.slice(0, 4);
 
     let movieObj = {
         //movie id #
         id: movie.id,
         title: movie.title,
         poster: movie.poster_path,
-        year: movie.release_date,
-        actors: result,
+        overview: movie.overview,
+        year: movie.release_date.slice(0, 4),
+        // actors: result,
         watch: false,
         watched: false,
         rating: 0,
@@ -102,7 +108,7 @@ function buildMovieObj(movie) {
     templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
     // console.log ("arrayOfMoviesFromSearch", arrayOfMoviesFromSearch);
     // This is handling the RateYo rating functionality
-    });
+    // });
     // return movieObj;
     // console.log($(".rateStars"));
     // // debugger;
@@ -124,7 +130,11 @@ function buildMovieObj(movie) {
 
 //when the use clicks the '+ My Movies' button, the array of returned API results are looped through to find a the object with matching movie ID from user click. That single movie object is then sent to Firebase.
 $(document).on("click", ".addToUserMovies", function(event) {
+
     // console.log("click save new movie", event.currentTarget.id);
+    
+    console.log("event for click on add movie", event);
+    console.log("click save new movie", event.currentTarget.id);
 
     for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
         if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
@@ -141,6 +151,42 @@ $(document).on("click", "#watched-btn", function(event) {
     loadMoviesToDOM();
     // console.log("click save new movie", event.currentTarget.id);
 });
+
+
+$(document).on("click", ".open-modal", function(event) {
+    console.log("open modal clicked - event:", event.currentTarget.getAttribute("movie-id"));
+
+    let movieID = event.currentTarget.getAttribute("movie-id");
+
+    let movieObjectForModal = findMovieForModal(movieID);
+    console.log("movieToDisplay", movieObjectForModal);
+
+    let modalMovieDisplay = `<p>${movieObjectForModal.title}</p>
+                            <p>https://image.tmdb.org/t/p/w185/${movieObjectForModal.poster}</p>
+                            <p>${movieObjectForModal.overview}</p>
+                            <p>${movieObjectForModal.year}</p>`;
+
+
+     $(".modal-body").html(modalMovieDisplay);
+
+    // for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
+    //     if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
+    //         // console.log ("FOUND A MATCH!");
+    //         db.addMovie(arrayOfMoviesFromSearch[i]);
+    //     }
+    // }
+});
+
+
+
+function findMovieForModal (movieID) {   
+
+    let selectedMovie = arrayOfMoviesFromSearch.find((array) => {
+                        return(array.id == movieID);
+                        });
+
+    return selectedMovie;
+}
 
 
     //call to database
