@@ -72,52 +72,111 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                         console.log("FOUND arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
                     }
                 });
-            }else {
+            } else {
                 db.getApiMovies()
                 .then(function(movieData) {
-                    return new Promise ((resolve, reject) => {
-                        movieData.forEach(function(movie) {
-                            // arrayOfMoviesFromSearch = [];
-                            buildMovieObj(movie);
-                            // console.log("movie", movie);
-                            // templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
-                            //First, put the API movies into the combined array:
-                            combinedArray = arrayOfMoviesFromSearch;
-                         });
-                        // console.log("combinedArray after api search", combinedArray);
-                        resolve (combinedArray);
+                    movieData.forEach(function(movie) {
+                        // arrayOfMoviesFromSearch = [];
+                        buildMovieObj(movie);
                     });
-                })
-                .then(function(combinedArray) {
-                    db.getMovies(user.getUser())
-                    .then(function(userMovies) {
-                            console.log("userMovies", userMovies);
-                            // combinedArray = userMovies.concat(combinedArray);
-                            //Do the search to the user movies and return filtered results
-                            var fuse = new Fuse(userMovies, options);
-                            var result = fuse.search($("#dbSearch").val());
-                            console.log("fuse object", fuse);
-                            console.log("fuse search result", result);
-                            userMovies = result;
-                            console.log("combinedArray before combined", combinedArray);
-                            Object.keys(userMovies).forEach((key)=> {
-                                combinedArray.unshift(userMovies[key]);
-                            });
-                            console.log("combinedArray after combined", combinedArray);
 
-                            templates.populatePageBeforeTracked(combinedArray);
-                            // If there are no results, say so
-                            if(combinedArray.length === 0){
-                                console.log("no movies found");
-                                $("#forHandlebarsInsert").html(`<div id="null-search"><h1>No results found!</h1></div>`);
-                            } else {
-                                console.log("FOUND some:", combinedArray);
-                            }
-                        });
+                    console.log("arrayOfMoviesFromSearch when logged in", arrayOfMoviesFromSearch);
+
+                    return db.getMovies(user.getUser());
+                })
+                .then(function(moviesFromFirebase) {
+                    console.log("moviesFromFirebase", moviesFromFirebase);
+
+                    let firebaseMovieArray = [];
+
+                    $.each(moviesFromFirebase, (index, item) => {
+                        console.log("in moviesFromFirebase --> index:", index, "item:", item);
+                        item.firebase_index = index;
+                        firebaseMovieArray.push(item);
+                    });
+
+                    console.log("firebaseMovieArray after addition of movies from fb:", firebaseMovieArray);
+
+                    return firebaseMovieArray;
+                })
+                .then(function(firebaseMovieArray) {
+
+                    let combinedArray = firebaseMovieArray;
+
+                    let firebaseIndices = $.map(firebaseMovieArray, (element, index) => {
+                        return element.id;
+                    }); 
+
+                    console.log("firebaseIndices", firebaseIndices);
+
+                    // let result = $.grep(arrayOfMoviesFromSearch, function (elementAPI, indexAPI) => {
+                    //     return($.each(firebaseMovieArray, (indexFB, itemFB) => {
+
+                    //     }););
+                    // });
+
+                    $.each(arrayOfMoviesFromSearch, (indexAPI, itemAPI) => {
+                        if (firebaseIndices.includes(itemAPI.id)) {
+                            console.log("searched movie appears on FB");
+                        } else {
+                            combinedArray.push(itemAPI);
+                        }
+                    });
+
+                    console.log("combinedArray at end of search", combinedArray);
+
+                    return combinedArray;
                 });
             }
     }
 });
+
+    //  ************* TED'S SEARCH FUNCTION
+    //             db.getApiMovies()
+    //             .then(function(movieData) {
+    //                 return new Promise ((resolve, reject) => {
+    //                     movieData.forEach(function(movie) {
+    //                         // arrayOfMoviesFromSearch = [];
+    //                         buildMovieObj(movie);
+    //                         // console.log("movie", movie);
+    //                         // templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
+    //                         //First, put the API movies into the combined array:
+    //                         combinedArray = arrayOfMoviesFromSearch;
+    //                      });
+    //                     // console.log("combinedArray after api search", combinedArray);
+    //                     resolve (combinedArray);
+    //                 });
+    //             })
+    //             .then(function(combinedArray) {
+    //                 db.getMovies(user.getUser())
+    //                 .then(function(userMovies) {
+    //                         console.log("userMovies", userMovies);
+    //                         // combinedArray = userMovies.concat(combinedArray);
+    //                         //Do the search to the user movies and return filtered results
+    //                         var fuse = new Fuse(userMovies, options);
+    //                         var result = fuse.search($("#dbSearch").val());
+    //                         console.log("fuse object", fuse);
+    //                         console.log("fuse search result", result);
+    //                         userMovies = result;
+    //                         console.log("combinedArray before combined", combinedArray);
+    //                         Object.keys(userMovies).forEach((key)=> {
+    //                             combinedArray.unshift(userMovies[key]);
+    //                         });
+    //                         console.log("combinedArray after combined", combinedArray);
+
+    //                         templates.populatePageBeforeTracked(combinedArray);
+    //                         // If there are no results, say so
+    //                         if(combinedArray.length === 0){
+    //                             console.log("no movies found");
+    //                             $("#forHandlebarsInsert").html(`<div id="null-search"><h1>No results found!</h1></div>`);
+    //                         } else {
+    //                             console.log("FOUND some:", combinedArray);
+    //                         }
+    //                     });
+    //             });
+    //         }
+    // }
+// });
 
 
 
