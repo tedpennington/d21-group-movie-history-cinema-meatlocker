@@ -5,6 +5,7 @@
 // let $ = require('jquery'),
 let firebase = require("./fb-Config");
 
+
 //NOTESl
 //For title search:
 //working: https://api.themoviedb.org/3/search/movie?api_key=dbe82c339d871418f3be9db2647bb249&language=en-US&query=big&page=1
@@ -26,11 +27,13 @@ function getApiMovies() {
             dataType: "json"
         }).done((response) => {
             console.log("getApiMovies response: ", response);
-            resolve(response);
+            let results = response.results;
+            resolve(results);
         });
 
     });
 }
+
 
 //second call with cast2
 

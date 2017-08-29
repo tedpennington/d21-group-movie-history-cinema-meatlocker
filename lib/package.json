@@ -21,6 +21,7 @@
     "dependencies": {
         "bootstrap": "^3.3.7",
         "firebase": "^3.9.0",
+        "fuse.js": "^3.0.5",
         "materialize": "^1.0.0",
         "materialize-css": "^0.97.8",
         "rateyo": "^2.3.3",
