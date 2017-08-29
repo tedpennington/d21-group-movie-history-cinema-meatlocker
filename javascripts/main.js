@@ -87,8 +87,13 @@ $("#logout").click(() => {
 function buildMovieObj(movie) {
     // db.addCast(movie.id)
     //     .then((result) => {
-
-    // let movieYear = movie.release_date.slice(0, 4);
+    
+    let movieYear;
+    if (movie.release_date) {
+        movieYear = movie.release_date.slice(0, 4);
+    } else {
+        movieYear = "Release date not listed";
+    }
 
     let movieObj = {
         //movie id #
@@ -96,7 +101,7 @@ function buildMovieObj(movie) {
         title: movie.title,
         poster: movie.poster_path,
         overview: movie.overview,
-        year: movie.release_date.slice(0, 4),
+        year: movieYear,
         // actors: result,
         watch: false,
         watched: false,
@@ -158,23 +163,30 @@ $(document).on("click", ".open-modal", function(event) {
 
     let movieID = event.currentTarget.getAttribute("movie-id");
 
-    let movieObjectForModal = findMovieForModal(movieID);
-    console.log("movieToDisplay", movieObjectForModal);
+    db.addCast(movieID)
+    .then((castOutput) => {
 
-    let modalMovieDisplay = `<p>${movieObjectForModal.title}</p>
-                            <p>https://image.tmdb.org/t/p/w185/${movieObjectForModal.poster}</p>
-                            <p>${movieObjectForModal.overview}</p>
-                            <p>${movieObjectForModal.year}</p>`;
+        let movieObjectForModal = findMovieForModal(movieID);
+        console.log("movieToDisplay", movieObjectForModal);
+
+        let modalMovieDisplay = `<img src="https://image.tmdb.org/t/p/w185/${movieObjectForModal.poster}">
+                                <p>${movieObjectForModal.title}</p>
+                                <p>${castOutput}</p>
+                                <p>${movieObjectForModal.overview}</p>
+                                <p>${movieObjectForModal.year}</p>`;
 
 
-     $(".modal-body").html(modalMovieDisplay);
+         $(".modal-body").html(modalMovieDisplay);
 
-    // for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
-    //     if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-    //         // console.log ("FOUND A MATCH!");
-    //         db.addMovie(arrayOfMoviesFromSearch[i]);
-    //     }
-    // }
+        // for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
+        //     if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
+        //         // console.log ("FOUND A MATCH!");
+        //         db.addMovie(arrayOfMoviesFromSearch[i]);
+        //     }
+        // }
+
+
+    });
 });
 
 
