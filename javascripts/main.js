@@ -48,8 +48,13 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                     // console.log("movie", movie);
 
                 });
-
-                console.log("arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
+                console.log("arrayOfMoviesFromSearch at end of search:", arrayOfMoviesFromSearch);
+                if(arrayOfMoviesFromSearch.length === 0){
+                    console.log("no movies found");
+                    $("#forHandlebarsInsert").html(`<div id="null-search"><h1>No results found!</h1></div>`);
+                } else {
+                    console.log("FOUND arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
+                }
             });
     }
 });
@@ -78,6 +83,7 @@ $("#logout").click(() => {
     user.logOut();
     $("#logout").addClass("is-hidden");
     $("#auth-btn").removeClass("is-hidden");
+    $("#forHandlebarsInsert").html(`<div id="logout-message"><h1>Logged Out!</h1></div>`);
 });
 
 
@@ -140,11 +146,33 @@ $(document).on("click", ".addToUserMovies", function(event) {
     
     console.log("event for click on add movie", event);
     console.log("click save new movie", event.currentTarget.id);
+    console.log("user.getUser()", user.getUser());
+    if(user.getUser() == null) {
+        user.logInGoogle()
+        .then((result) => {
+            // console.log("result from login", result.user.uid);
+            user.setUser(result.user.uid);
+            let currentUser = result.user.uid;
+            $("#auth-btn").addClass("is-hidden");
+            $("#logout").removeClass("is-hidden");
+            db.getApiMovies()
+            .then(function(movieData) {
+                movieData.results.forEach(function(movie) {
+                    // arrayOfMoviesFromSearch = [];
+                    buildMovieObj(movie);
+                    // console.log("movie", movie);
 
-    for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
-        if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-            // console.log ("FOUND A MATCH!");
-            db.addMovie(arrayOfMoviesFromSearch[i]);
+                });
+
+                console.log("arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
+            });
+        });
+    }else{
+        for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
+            if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
+                // console.log ("FOUND A MATCH!");
+                db.addMovie(arrayOfMoviesFromSearch[i]);
+            }
         }
     }
 });
