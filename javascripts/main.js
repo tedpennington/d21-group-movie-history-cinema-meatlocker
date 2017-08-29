@@ -171,9 +171,10 @@ let thisTarjeh = null;
         $("#untracked-btn").attr('disabled', true);
     });
 
-    //Click Funtion for Watched button
+    // Click Funtion for Watched button
     $("#watched-btn").click(function(){
         console.log("clicked on Watched toggle button");
+        loadMoviesToDOM();
         if (thisTarjeh === null) {
             console.log("watched if statement running");
             $(this).siblings().attr('disabled', false);
@@ -215,14 +216,14 @@ let thisTarjeh = null;
 
 //when the use clicks the '+ My Movies' button, the array of returned API results are looped through to find a the object with matching movie ID from user click. That single movie object is then sent to Firebase.
 $(document).on("click", ".addToUserMovies", function(event) {
-
-    // // console.log("click save new movie", event.currentTarget.id);
-    
-    // console.log("event for click on add movie", event);
     // console.log("click save new movie", event.currentTarget.id);
-    // console.log("user.getUser()", user.getUser());
+    
+    console.log("event for click on add movie", event);
+    console.log("click save new movie", event.currentTarget.id);
+    console.log("user.getUser()", user.getUser());
+    $(this).attr('disabled', true);
     if(user.getUser() == null) {
-         user.logInGoogle()
+        user.logInGoogle()
         .then((result) => {
             // console.log("result from login", result.user.uid);
             user.setUser(result.user.uid);
@@ -235,35 +236,28 @@ $(document).on("click", ".addToUserMovies", function(event) {
                     // arrayOfMoviesFromSearch = [];
                     buildMovieObj(movie);
                     // console.log("movie", movie);
-
                 });
-
+                console.log("arrayOfMoviesFromSearch at end of search function:", arrayOfMoviesFromSearch);
             });
-
-
-
-            $(this).attr('disabled', true);
-
-            for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
-            if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-
-                    // console.log ("FOUND A MATCH!");
-                    db.addMovie(arrayOfMoviesFromSearch[i]);
-
-                }
-            }
         });
+    }else{
+        for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
+            if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
+                // console.log ("FOUND A MATCH!");
+                db.addMovie(arrayOfMoviesFromSearch[i]);
+            }
+        }
     }
 });
 
 
 
 //button to show only movies added to 'tracked' by the user
-$(document).on("click", "#watched-btn", function(event) {
-    console.log ("clicked watched");
-    loadMoviesToDOM();
-    // console.log("click save new movie", event.currentTarget.id);
-});
+// $(document).on("click", "#watched-btn", function(event) {
+//     console.log ("clicked watched");
+//     loadMoviesToDOM();
+//     // console.log("click save new movie", event.currentTarget.id);
+// });
 
 // class="open-modal btn btn-info btn-lg"
 $(document).on("click", ".modal-open-button", function(event) {
