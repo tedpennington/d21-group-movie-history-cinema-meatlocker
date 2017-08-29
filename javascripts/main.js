@@ -207,31 +207,13 @@ $(document).on("click", ".open-modal", function(event) {
     .then((castOutput) => {
 
         let movieObjectForModal = findMovieForModal(movieID);
-
         movieObjectForModal.cast = castOutput;
 
         console.log("movieToDisplay", movieObjectForModal);
-
         templates.populateModalBeforeTracked(movieObjectForModal);
-
-        // let modalMovieDisplay = `<img src="${movieObjectForModal.largeposter}">
-        //                         <p>${movieObjectForModal.title}</p>
-        //                         <p>${castOutput}</p>
-        //                         <p>${movieObjectForModal.overview}</p>
-        //                         <p>${movieObjectForModal.year}</p>`;
-
-
-        //  $(".modal-body").html(modalMovieDisplay);
-
-        // for (let i=0; i < arrayOfMoviesFromSearch.length; i++) {
-        //     if (event.currentTarget.id == arrayOfMoviesFromSearch[i].id ) {
-        //         // console.log ("FOUND A MATCH!");
-        //         db.addMovie(arrayOfMoviesFromSearch[i]);
-        //     }
-        // }
-
-
+        
     });
+
 });
 
 
