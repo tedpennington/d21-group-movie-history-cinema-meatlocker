@@ -62,7 +62,8 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                         // arrayOfMoviesFromSearch = [];
                         buildMovieObj(movie);
                         // console.log("movie", movie);
-                        templates.populatePageBeforeTracked(arrayOfMoviesFromSearch);
+                        outputArray = arrayOfMoviesFromSearch;
+                        templates.populatePageBeforeTracked(outputArray);
 
                     });
                     console.log("arrayOfMoviesFromSearch at end of search:", arrayOfMoviesFromSearch);
