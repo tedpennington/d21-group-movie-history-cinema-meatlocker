@@ -55,14 +55,19 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
         outputArray = [];
         // let combinedArray = [];
         // If there's a user, just search the API and return results
+        console.log("user.getUser()", user.getUser());
+
         if(user.getUser() == null) {
+            arrayOfMoviesFromSearch = [];
             db.getApiMovies()
                 .then(function(movieData) {
+                    $("#forHandlebarsInsert").html("");
                     movieData.forEach(function(movie) {
                         // arrayOfMoviesFromSearch = [];
                         buildMovieObj(movie);
                         // console.log("movie", movie);
                         outputArray = arrayOfMoviesFromSearch;
+                       
                         templates.populatePageBeforeTracked(outputArray);
 
                     });
@@ -76,6 +81,7 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                     }
                 });
             } else {
+                arrayOfMoviesFromSearch = [];
                 db.getApiMovies()
                 .then(function(movieData) {
                     movieData.forEach(function(movie) {
@@ -133,10 +139,13 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                 .then(function(combinedArray) {
 
                     outputArray = combinedArray;
+                    $("#forHandlebarsInsert").html("");
 
                     $.each(outputArray, (indexOutput, itemOutput) => {
 
                         console.log("itemOutput.firebase_index", itemOutput.firebase_index);
+
+
 
                         if(itemOutput.firebase_index) {
                             templates.addMovieToDomAfterTracked(itemOutput);
