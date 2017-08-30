@@ -1,0 +1,17 @@
+
+<div class="col-lg-3" id="movie--{{@index}}">
+
+      <img class="card-img-top" src="{{largeposter}}" alt="Image Coming Soon!">
+
+      <div class="card-block">
+            <div class="rateYo"></div> 
+            <h4 class="card-title">{{title}}</h4>
+            <p class="card-text">Released: {{year}}</p>
+          
+            <nav aria-label="...">
+            	  <button type="button" class="modal-open-button" movie-id="{{id}}" data-toggle="modal" data-target="#movieDetail">Movie Details</button>
+                <button class="addToUserMovies" id="{{id}}" type="button"><a href="#">+ My Movies</a><span class="sr-only">(current)</span></button>
+	      </nav>
+      </div>
+   
+</div>

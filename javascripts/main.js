@@ -6,6 +6,7 @@
     templates = require("./dom-builder"),
     user = require("./user"),
     arrayOfMoviesFromSearch = [],
+    outputArray = [],
     Handlebars = require('hbsfy/runtime');
     let Fuse = require("../lib/node_modules/fuse.js/dist/fuse.min.js");
 
@@ -51,7 +52,8 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
 //The below two lines clear the HTML and movie array so that each new search will present only movies that match the latest search
         $("#forHandlebarsInsert").html();
         arrayOfMoviesFromSearch = [];
-        let combinedArray = [];
+        outputArray = [];
+        // let combinedArray = [];
         // If there's a user, just search the API and return results
         if(user.getUser() == null) {
             db.getApiMovies()
@@ -126,6 +128,23 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                     console.log("combinedArray at end of search", combinedArray);
 
                     return combinedArray;
+                })
+                .then(function(combinedArray) {
+
+                    outputArray = combinedArray;
+
+                    $.each(outputArray, (indexOutput, itemOutput) => {
+
+                        console.log("itemOutput.firebase_index", itemOutput.firebase_index);
+
+                        if(itemOutput.firebase_index) {
+                            templates.addMovieToDomAfterTracked(itemOutput);
+                        } else {
+                            templates.addMovieToDomBeforeTracked(itemOutput);
+                        }
+
+                    });
+
                 });
             }
     }
@@ -336,7 +355,12 @@ $(document).on("click", ".modal-open-button", function(event) {
         movieObjectForModal.cast = castOutput;
 
         console.log("movieToDisplay", movieObjectForModal);
-        templates.populateModalBeforeTracked(movieObjectForModal);
+
+        if (movieObjectForModal.firebase_index) {
+            templates.populateModalAfterTracked(movieObjectForModal);
+        } else {
+            templates.populateModalBeforeTracked(movieObjectForModal);
+        }
         
     });
 
@@ -345,7 +369,7 @@ $(document).on("click", ".modal-open-button", function(event) {
 
 // function to find movie in arrayOfMoviesFromSearch to display in modal 
 function findMovieForModal (movieID) {   
-    let selectedMovie = arrayOfMoviesFromSearch.find((array) => {
+    let selectedMovie = outputArray.find((array) => {
                         return(array.id == movieID);
                         });
     return selectedMovie;
