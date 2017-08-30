@@ -79,7 +79,7 @@ function populateModalBeforeTracked(selectedMovie) {
 }
 
 function populateModalAfterTracked(selectedMovie) {
-    $(".modal-body").html(modalBeforeTracked(selectedMovie));
+    $(".modal-body").html(modalAfterTracked(selectedMovie));
     $(".rateYo").rateYo({
     numStars: 10,
     maxValue: 10,

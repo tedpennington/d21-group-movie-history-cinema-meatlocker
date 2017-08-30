@@ -357,8 +357,10 @@ $(document).on("click", ".modal-open-button", function(event) {
         console.log("movieToDisplay", movieObjectForModal);
 
         if (movieObjectForModal.firebase_index) {
+            console.log("movieObjectForModal.firebase_index", movieObjectForModal.firebase_index);
             templates.populateModalAfterTracked(movieObjectForModal);
         } else {
+            console.log("movieObjectForModal.firebase_index", movieObjectForModal.firebase_index);
             templates.populateModalBeforeTracked(movieObjectForModal);
         }
         
