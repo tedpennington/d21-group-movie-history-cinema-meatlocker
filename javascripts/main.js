@@ -82,6 +82,7 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                 });
             } else {
                 arrayOfMoviesFromSearch = [];
+                $("#forHandlebarsInsert").html("");
                 db.getApiMovies()
                 .then(function(movieData) {
                     movieData.forEach(function(movie) {
@@ -139,7 +140,7 @@ document.getElementById("dbSearch").addEventListener("keyup", function(event) {
                 .then(function(combinedArray) {
 
                     outputArray = combinedArray;
-                    $("#forHandlebarsInsert").html("");
+                    // $("#forHandlebarsInsert").html("");
 
                     $.each(outputArray, (indexOutput, itemOutput) => {
 
